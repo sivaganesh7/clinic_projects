@@ -2,21 +2,18 @@ const Patient = require("../models/Patient");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// REGISTER PATIENT
+// ✅ REGISTER PATIENT
 const registerPatient = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   try {
-    // Check if patient already exists
     const existingPatient = await Patient.findOne({ email });
     if (existingPatient) {
       return res.status(400).json({ message: "Patient already exists" });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new patient
     const newPatient = new Patient({
       firstName,
       lastName,
@@ -32,24 +29,21 @@ const registerPatient = async (req, res) => {
   }
 };
 
-// LOGIN PATIENT
+// ✅ LOGIN PATIENT
 const loginPatient = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Find patient by email
     const patient = await Patient.findOne({ email });
     if (!patient) {
       return res.status(404).json({ message: "Patient not found" });
     }
 
-    // Compare passwords
     const isMatch = await bcrypt.compare(password, patient.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Generate JWT token
     const token = jwt.sign(
       { userId: patient._id, role: "patient" },
       process.env.JWT_SECRET || "defaultsecretkey",
@@ -63,8 +57,24 @@ const loginPatient = async (req, res) => {
   }
 };
 
-// ✅ Export both
+// ✅ GET LOGGED-IN PATIENT PROFILE
+// GET /api/patient/me
+const getLoggedInPatient = async (req, res) => {
+  try {
+    const patient = await Patient.findById(req.user.userId).select("-password");
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
+    res.status(200).json(patient);
+  } catch (error) {
+    console.error("Fetch patient error:", error);
+    res.status(500).json({ message: "Server error while fetching patient data" });
+  }
+};
+
+
 module.exports = {
   registerPatient,
   loginPatient,
+  getLoggedInPatient, // ✅ Add this line
 };

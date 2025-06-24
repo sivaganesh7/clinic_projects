@@ -2,16 +2,21 @@ const express = require("express");
 const router = express.Router();
 
 // Controller functions
-const { registerPatient, loginPatient } = require("../controllers/patientController");
+const {
+  registerPatient,
+  loginPatient,
+  getLoggedInPatient,
+} = require("../controllers/patientController");
 
-// Patient Registration Route
+// Auth middleware to protect routes
+const authMiddleware = require("../middleware/authMiddleware");
+
+// ------------------ PUBLIC ROUTES ------------------ //
 router.post("/register", registerPatient);
-
-// Patient Login Route
 router.post("/login", loginPatient);
 
-// Future-Protected Routes (Example)
-// const authMiddleware = require("../middleware/authMiddleware");
-// router.get("/dashboard", authMiddleware, patientDashboardHandler);
+// ------------------ PROTECTED ROUTES ------------------ //
+router.get("/me", authMiddleware, getLoggedInPatient);
 
+// Export the router
 module.exports = router;

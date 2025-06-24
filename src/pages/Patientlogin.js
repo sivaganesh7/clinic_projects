@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 
 const PatientLogin = () => {
   const [formData, setFormData] = useState({
@@ -11,7 +13,7 @@ const PatientLogin = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // ✅ Validate email domain
@@ -20,20 +22,26 @@ const PatientLogin = () => {
       return;
     }
 
-    // ✅ Password must not be empty (already handled by HTML5 required, but added for robustness)
     if (!formData.password) {
       setError('Password is required');
       return;
     }
 
-    // ✅ Clear errors
     setError('');
 
-    // 🔐 Call secure backend API to validate credentials
-    console.log('Patient login:', formData);
+    try {
+      const response = await axios.post('http://localhost:5000/api/patient/login', formData);
 
-    // ✅ On success, redirect
-    navigate('/patient-dashboard');
+      if (response.data.token) {
+        localStorage.setItem('patientToken', response.data.token);
+        navigate('/patient-dashboard');
+      } else {
+        setError('Login failed: No token received');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
+    }
   };
 
   return (
