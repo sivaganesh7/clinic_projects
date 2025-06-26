@@ -3,7 +3,6 @@ import axios from 'axios';
 import PatientNavbar from '../components/Patient/PatientNavbar';
 import { useNavigate } from 'react-router-dom';
 
-
 const BookAppointment = () => {
   const [formData, setFormData] = useState({
     specialty: '',
@@ -19,20 +18,31 @@ const BookAppointment = () => {
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('patientToken'); // ✅ match the login key
-
+  const token = localStorage.getItem('patientToken');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/appointments/specialties', {
-      headers: { Authorization: `Bearer ${token}` },
-    }).then(res => setSpecialties(res.data));
+    if (!token) {
+      navigate('/patient-login');
+    }
+  }, [token, navigate]);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/appointments/specialties', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setSpecialties(res.data))
+      .catch(() => setError('Failed to load specialties'));
   }, [token]);
 
   useEffect(() => {
     if (formData.specialty) {
-      axios.get(`http://localhost:5000/api/appointments/doctors/${formData.specialty}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      }).then(res => setDoctors(res.data));
+      axios
+        .get(`http://localhost:5000/api/appointments/doctors/${formData.specialty}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => setDoctors(res.data))
+        .catch(() => setError('Failed to load doctors'));
     }
   }, [formData.specialty, token]);
 
@@ -41,10 +51,16 @@ const BookAppointment = () => {
     setError('');
     setSuccess('');
 
+    if (!formData.specialty || !formData.doctorId || !formData.date || !formData.time || !formData.issue) {
+      setError('Please fill out all required fields.');
+      return;
+    }
+
     try {
       const res = await axios.post('http://localhost:5000/api/appointments/book', formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       setSuccess(res.data.message);
       setFormData({ specialty: '', doctorId: '', date: '', time: '', issue: '' });
     } catch (err) {
@@ -55,7 +71,6 @@ const BookAppointment = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white p-6">
       <PatientNavbar />
-
       <main className="max-w-2xl mx-auto">
         <h2 className="text-3xl font-bold text-center text-gray-900 mb-6">Book Your Appointment</h2>
 
@@ -69,6 +84,7 @@ const BookAppointment = () => {
               value={formData.specialty}
               onChange={(e) => setFormData({ ...formData, specialty: e.target.value, doctorId: '' })}
               className="w-full border border-gray-300 rounded-md p-2"
+              required
             >
               <option value="">-- Choose Specialty --</option>
               {specialties.map((spec, i) => (
@@ -83,10 +99,11 @@ const BookAppointment = () => {
               value={formData.doctorId}
               onChange={(e) => setFormData({ ...formData, doctorId: e.target.value })}
               className="w-full border border-gray-300 rounded-md p-2"
+              required
               disabled={!doctors.length}
             >
               <option value="">-- Choose Doctor --</option>
-              {doctors.map(doc => (
+              {doctors.map((doc) => (
                 <option key={doc._id} value={doc._id}>
                   Dr. {doc.firstName} {doc.lastName}
                 </option>

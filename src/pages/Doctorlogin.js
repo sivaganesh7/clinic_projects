@@ -1,39 +1,54 @@
 import React, { useState } from 'react';
 import { Heart, Stethoscope } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const DoctorLogin = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  axios.defaults.baseURL = 'http://localhost:5000'; // Backend server URL
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Validate email domain
+    // Validation
     if (!formData.email.endsWith('@meditrack.local')) {
       setError('Email must end with @meditrack.local');
       return;
     }
 
-    // ✅ Validate password
     if (!formData.password) {
       setError('Password is required');
       return;
     }
 
-    // ✅ Clear error
-    setError('');
+    try {
+      setError('');
+      setLoading(true);
 
-    // 🧠 API call to login can go here
-    console.log('Doctor login:', formData);
+      // 🔐 Login API
+      const res = await axios.post('/api/doctor/login', {
+        email: formData.email,
+        password: formData.password,
+      });
 
-    // ✅ On success, navigate
-    navigate('/doctor-dashboard');
+      const { token, doctor } = res.data;
+      const fullName = `${doctor.firstName} ${doctor.lastName}`;
+
+      // Store in localStorage
+      localStorage.setItem('token', token);
+      localStorage.setItem('doctorName', fullName);
+
+      navigate('/doctor-dashboard');
+    } catch (err) {
+      const message = err.response?.data?.message || 'Invalid credentials or server error.';
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,12 +56,12 @@ const DoctorLogin = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-sm font-bold text-blue-600 px-4 py-2 border border-solid rounded-md bg-red transition-all duration-300 hover:bg-blue-200 hover:text-blue-700 hover:shadow-md"
+          className="flex items-center gap-2 text-sm font-bold text-blue-600 px-4 py-2 border rounded-md transition-all hover:bg-blue-100 hover:shadow"
         >
           ← Back to Home
         </button>
 
-        <div className="text-center">
+        <div className="text-center mt-6">
           <Heart className="mx-auto h-12 w-12 text-green-600" />
           <h2 className="mt-4 text-3xl font-bold text-gray-900">MediTrack Lite</h2>
           <h3 className="mt-2 text-2xl font-bold text-gray-900">Welcome Back, Doctor</h3>
@@ -62,7 +77,6 @@ const DoctorLogin = () => {
           </div>
           <p className="text-gray-600 mb-6">Enter your credentials to access your dashboard</p>
 
-          {/* ✅ Error Message */}
           {error && (
             <div className="bg-red-100 text-red-700 px-4 py-2 mb-4 rounded-md text-sm">
               ⚠️ {error}
@@ -79,7 +93,7 @@ const DoctorLogin = () => {
                 type="email"
                 required
                 placeholder="doctor.email@meditrack.local"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
@@ -94,7 +108,7 @@ const DoctorLogin = () => {
                 type="password"
                 required
                 placeholder="Enter your password"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
@@ -102,9 +116,12 @@ const DoctorLogin = () => {
 
             <button
               type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              disabled={loading}
+              className={`w-full flex justify-center py-3 px-4 rounded-md shadow-sm text-sm font-medium text-white ${
+                loading ? 'bg-green-400' : 'bg-green-600 hover:bg-green-700'
+              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500`}
             >
-              Sign In
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 

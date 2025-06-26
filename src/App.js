@@ -9,7 +9,10 @@ import PatientDashboard from './pages/PatientDashboard';
 import BookAppointment from './pages/BookAppointment';
 import ProtectedRoute from './components/ProtectedRoute';
 import PatientAppointments from './pages/PatientAppointments';
-import Prescriptions from './pages/Prescriptions';
+import PatientPrescriptions from './pages/PatientPrescriptions';
+import DoctorDashboard from './pages/DoctorDashboard';
+import DoctorAppointments from './pages/DoctorAppointments';
+import DoctorPrescriptions from './pages/DoctorPrescriptions';
 
 function App() {
   return (
@@ -20,9 +23,14 @@ function App() {
         <Route path="/doctor-login" element={<DoctorLogin />} />
         <Route path="/patient-register" element={<PatientRegister />} />
         <Route path="/doctor-register" element={<DoctorRegister />} />
+        <Route path="/book-appointment" element={<BookAppointment />} />
         <Route path="/patient-appointments" element={<PatientAppointments />} />
         <Route path="/patient-dashboard" element={<PatientDashboard />} />
-        <Route path="/prescriptions" element={<Prescriptions />} />
+        <Route path="/prescriptions" element={<PatientPrescriptions />} />
+        <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+        <Route path="/doctor-appointment" element={<DoctorAppointments />} />
+        <Route path="/doctor-prescriptions" element={<DoctorPrescriptions />} />
+        <Route path="/doctor-feedback" element={<DoctorDashboard />} />
         
 
         {/* ✅ Protect sensitive routes */}

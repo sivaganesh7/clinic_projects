@@ -1,47 +1,94 @@
-import React from 'react';
-// import { Link } from 'react-router-dom';
-import PatientNavbar from '../components/Patient/PatientNavbar';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import PatientNavbar from "../components/Patient/PatientNavbar";
+import AppointmentCard from "../components/Patient/AppointmentCard";
 
 const PatientAppointments = () => {
-  const appointments = [
-    { id: 1, doctor: "Dr. Sarah Wilson", specialty: "Cardiologist", date: "2024-06-20", time: "10:30 AM", issue: "Chest pain and irregular heartbeat", status: "Pending" },
-    { id: 2, doctor: "Dr. Michael Chen", specialty: "Dentist", date: "2024-06-22", time: "2:00 PM", issue: "Regular dental checkup and cleaning", status: "Pending" },
-  ];
+  const [appointments, setAppointments] = useState([]);
+  const [activeTab, setActiveTab] = useState("new");
+
+  const token = localStorage.getItem("patientToken");
+
+  const handleCancel = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/appointments/cancel/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      // Re-fetch appointments after cancel
+      const res = await axios.get("http://localhost:5000/api/appointments/my", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setAppointments(res.data);
+    } catch (err) {
+      console.error("Cancel failed", err);
+    }
+  };
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/appointments/my", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setAppointments(res.data);
+      } catch (err) {
+        console.error("Failed to fetch appointments", err);
+      }
+    };
+
+    fetchAppointments();
+  }, [token]);
+
+  const filtered = appointments.filter((a) => a.status === activeTab);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white p-6">
-        <PatientNavbar />
-      
-      <main className="max-w-4xl mx-auto">
-        <div className="text-center mb-6">
-          <svg className="mx-auto h-12 w-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-          <h2 className="text-2xl font-bold text-gray-900">All Appointments</h2>
-          <p className="text-gray-600">Manage your healthcare appointments</p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+      <PatientNavbar />
 
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <div className="flex justify-between mb-4">
-            <span>Pending ({appointments.filter(a => a.status === "Pending").length})</span>
-            <span>Completed (0)</span>
-          </div>
-          {appointments.map((appointment) => (
-            <div key={appointment.id} className="border-b py-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="font-semibold">{appointment.doctor}</p>
-                  <p className="text-gray-600">{appointment.specialty}</p>
-                  <p className="text-gray-600">{appointment.date} {appointment.time}</p>
-                  <p className="text-gray-600">{appointment.issue}</p>
-                </div>
-                <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">{appointment.status}</span>
-              </div>
-              <button className="text-red-600 hover:text-red-700 mt-2">Cancel</button>
-            </div>
+      <div className="max-w-5xl mx-auto">
+        <h2 className="text-4xl font-extrabold mb-6 text-gray-800 tracking-tight animate-fade-in">
+          My Appointments
+        </h2>
+
+        {/* Tabs */}
+        <div className="flex gap-2 mb-8 overflow-x-auto border-b border-gray-200">
+          {["new", "in-progress", "completed"].map((tab) => (
+            <button
+              key={tab}
+              className={`px-6 py-2.5 rounded-t-lg font-medium transition-all duration-300 ${
+                activeTab === tab
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "bg-white text-gray-600 hover:bg-gray-100"
+              }`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab === "new"
+                ? "New Appointments"
+                : tab === "in-progress"
+                ? "In Progress"
+                : "Completed"}
+            </button>
           ))}
         </div>
-      </main>
+
+        {/* Appointment Cards */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.length > 0 ? (
+            filtered.map((appointment) => (
+              <AppointmentCard
+                key={appointment._id}
+                appointment={appointment}
+                onCancel={handleCancel}
+                className="transform transition-transform duration-300 hover:scale-105"
+              />
+            ))
+          ) : (
+            <p className="text-gray-500 text-center col-span-full py-8 bg-white rounded-lg shadow-md animate-pulse">
+              No appointments in this section.
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

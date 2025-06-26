@@ -37,12 +37,24 @@ exports.loginDoctor = async (req, res) => {
     if (!valid) return res.status(400).json({ message: "Invalid credentials" });
 
     const token = jwt.sign(
-      { id: doctor._id, role: doctor.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+  { userId: doctor._id, role: doctor.role }, // ✅ updated key
+  process.env.JWT_SECRET,
+  { expiresIn: "1h" }
+);
 
-    res.status(200).json({ token, message: "✅Login successful" });
+
+    // Return doctor info with token
+    res.status(200).json({
+      token,
+      message: "✅Login successful",
+      doctor: {
+        id: doctor._id,
+        firstName: doctor.firstName,
+        lastName: doctor.lastName,
+        email: doctor.email,
+        specialization: doctor.specialization
+      }
+    });
   } catch (err) {
     console.error("❌ Login Error:", err.message);
     res.status(500).json({ error: err.message });
