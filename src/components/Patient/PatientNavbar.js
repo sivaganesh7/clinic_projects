@@ -1,37 +1,51 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Calendar, FileText, LogOut } from 'lucide-react';
 
 const PatientNavbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('patientToken'); // remove token
-    navigate('/'); // redirect to home
+    localStorage.removeItem('patientToken');
+    navigate('/');
   };
 
   return (
-    <nav className="bg-gradient-to-r from-blue-600 to-indigo-700 shadow-lg py-4 px-6 flex justify-between items-center sticky top-0 z-50">
-      <h1 className="text-2xl font-extrabold text-white tracking-tight">
-        <Link to="/" className="hover:text-blue-200 transition-colors duration-300">MediTrack</Link>
+    <nav className="backdrop-blur-md bg-blue-600/80 border-b border-white/10 shadow-md py-3 px-6 flex justify-between items-center sticky top-0 z-50">
+      <h1 className="text-2xl font-bold text-white tracking-tight drop-shadow-sm">
+        <Link to="/" className="hover:text-gray-100 transition duration-200">MediTrack</Link>
       </h1>
-      <div className="flex items-center space-x-6">
+
+      <div className="flex items-center space-x-4">
         <Link 
           to="/patient-appointments" 
-          className="text-white text-sm font-medium hover:bg-white/10 px-4 py-2 rounded-full transition-all duration-300"
+          className="flex items-center gap-1 text-white hover:bg-white/10 px-3 py-2 rounded-lg transition"
         >
-          Appointments
+          <Calendar size={18} />
+          <span className="text-sm font-medium">Appointments</span>
         </Link>
+
         <Link 
           to="/prescriptions" 
-          className="text-white text-sm font-medium hover:bg-white/10 px-4 py-2 rounded-full transition-all duration-300"
+          className="flex items-center gap-1 text-white hover:bg-white/10 px-3 py-2 rounded-lg transition"
         >
-          Prescriptions
+          <FileText size={18} />
+          <span className="text-sm font-medium">Prescriptions</span>
         </Link>
+        <Link 
+          to="/patient-feedback" 
+          className="flex items-center gap-1 text-white hover:bg-white/10 px-3 py-2 rounded-lg transition"
+        >
+          
+          <span className="text-sm font-medium">Feedback</span>
+        </Link>
+
         <button 
           onClick={handleLogout} 
-          className="text-white text-sm font-semibold bg-red-500 hover:bg-red-600 px-4 py-2 rounded-full transition-all duration-300"
+          className="flex items-center gap-1 text-white bg-red-500 hover:bg-red-600 px-3 py-2 rounded-lg transition"
         >
-          Logout
+          <LogOut size={18} />
+          <span className="text-sm font-semibold">Logout</span>
         </button>
       </div>
     </nav>

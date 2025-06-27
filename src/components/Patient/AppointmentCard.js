@@ -35,7 +35,7 @@ const AppointmentCard = ({ appointment, onCancel }) => {
 
         {status === "completed" && (
           <Link
-            to={`/prescriptions/${_id}`}
+            to="/prescriptions"
             className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm"
           >
             View Prescription
