@@ -18,10 +18,12 @@ const patientRoutes = require("./routes/patientRoutes");
 const appointmentRoutes = require("./routes/appointmentRoutes");
 const authMiddleware = require("./middleware/authMiddleware");
 const prescriptionRoutes = require("./routes/prescriptionRoutes");
-const feedbackRoutes = require("./routes/feedbackRoutes"); // Add feedback routes
+const feedbackRoutes = require("./routes/feedbackRoutes");
+// Add feedback routes
 
 // Mount routes
 app.use("/api/doctor", doctorRoutes);
+
 app.use("/api/patient", patientRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/prescriptions", authMiddleware, prescriptionRoutes);

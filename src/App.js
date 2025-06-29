@@ -14,47 +14,52 @@ import DoctorDashboard from './pages/DoctorDashboard';
 import DoctorAppointments from './pages/DoctorAppointments';
 import DoctorPrescriptions from './pages/DoctorPrescriptions';
 import PatientFeedbacks from './pages/PatientFeedback';
+import DoctorProfile from './pages/DoctorProfile';
+import { DoctorProvider } from './context/DoctorContext';
+import DoctorFeedback from './pages/DoctorFeedback';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/patient-login" element={<PatientLogin />} />
-        <Route path="/doctor-login" element={<DoctorLogin />} />
-        <Route path="/patient-register" element={<PatientRegister />} />
-        <Route path="/doctor-register" element={<DoctorRegister />} />
-        <Route path="/book-appointment" element={<BookAppointment />} />
-        <Route path="/patient-appointments" element={<PatientAppointments />} />
-        <Route path="/patient-dashboard" element={<PatientDashboard />} />
-        <Route path="/prescriptions" element={<PatientPrescriptions />} />
-        <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
-        <Route path="/doctor-appointment" element={<DoctorAppointments />} />
-        <Route path="/doctor-prescriptions" element={<DoctorPrescriptions />} />
-        <Route path="/doctor-feedback" element={<DoctorDashboard />} />
-        <Route path="/patient-feedback" element={<PatientFeedbacks />} />
+    // ✅ Wrap the entire app inside DoctorProvider
+    <DoctorProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/patient-login" element={<PatientLogin />} />
+          <Route path="/doctor-login" element={<DoctorLogin />} />
+          <Route path="/patient-register" element={<PatientRegister />} />
+          <Route path="/doctor-register" element={<DoctorRegister />} />
+          <Route path="/book-appointment" element={<BookAppointment />} />
+          <Route path="/patient-appointments" element={<PatientAppointments />} />
+          <Route path="/patient-dashboard" element={<PatientDashboard />} />
+          <Route path="/prescriptions" element={<PatientPrescriptions />} />
+          <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+          <Route path="/doctor-appointment" element={<DoctorAppointments />} />
+          <Route path="/doctor-prescriptions" element={<DoctorPrescriptions />} />
+          <Route path="/patient-feedback" element={<PatientFeedbacks />} />
+          <Route path="/doctor-profile" element={<DoctorProfile />} />
+          <Route path="/doctor-feedback" element={<DoctorFeedback />} />
 
-        
-
-        {/* ✅ Protect sensitive routes */}
-        <Route
-          path="/patient-dashboard"
-          element={
-            <ProtectedRoute>
-              <PatientDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/book-appointment"
-          element={
-            <ProtectedRoute>
-              <BookAppointment />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </Router>
+          {/* ✅ Protect sensitive routes */}
+          <Route
+            path="/patient-dashboard"
+            element={
+              <ProtectedRoute>
+                <PatientDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/book-appointment"
+            element={
+              <ProtectedRoute>
+                <BookAppointment />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </DoctorProvider>
   );
 }
 

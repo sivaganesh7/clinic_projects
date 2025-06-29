@@ -96,7 +96,7 @@ const DoctorDashboard = () => {
         </div>
 
         {/* Statistic Cards */}
-        <div className="grid md:grid-cols-3 gap-6">
+        {/* <div className="grid md:grid-cols-3 gap-6">
           <div className="bg-white rounded-lg shadow-sm p-8 text-center">
             <div className="text-4xl font-bold text-blue-600 mb-2">12</div>
             <div className="text-gray-600 font-medium">New Appointments</div>
@@ -109,7 +109,7 @@ const DoctorDashboard = () => {
             <div className="text-4xl font-bold text-green-600 mb-2">45</div>
             <div className="text-gray-600 font-medium">Completed Today</div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

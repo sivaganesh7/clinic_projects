@@ -41,6 +41,7 @@ const bookAppointment = async (req, res) => {
   if (!doctorId || !date || !time) {
     return res.status(400).json({ message: "Doctor ID, date, and time are required" });
   }
+
   const appointmentDate = new Date(date);
   if (isNaN(appointmentDate.getTime()) || appointmentDate < new Date()) {
     return res.status(400).json({ message: "Invalid or past date" });
@@ -50,10 +51,15 @@ const bookAppointment = async (req, res) => {
   }
 
   try {
+    // Extract only YYYY-MM-DD from date for comparison
+    const dateOnly = appointmentDate.toISOString().split("T")[0];
     const existingCount = await Appointment.countDocuments({
       patient: patientId,
-      date: appointmentDate.toISOString().split("T")[0],
+      $expr: {
+        $eq: [{ $dateToString: { format: "%Y-%m-%d", date: "$date" } }, dateOnly],
+      },
     });
+
     if (existingCount >= 2) {
       return res.status(400).json({ message: "You can only book 2 appointments per day" });
     }
@@ -84,6 +90,30 @@ const bookAppointment = async (req, res) => {
   } catch (err) {
     console.error("❌ Error in bookAppointment:", err);
     res.status(500).json({ message: "Failed to book appointment", error: err.message });
+  }
+};
+
+// GET: Count appointments by date for logged-in patient
+const getAppointmentCountByDate = async (req, res) => {
+  try {
+    const { date } = req.params;
+    const patientId = req.user.userId;
+
+    if (!date) {
+      return res.status(400).json({ message: "Date is required" });
+    }
+
+    const count = await Appointment.countDocuments({
+      patient: patientId,
+      $expr: {
+        $eq: [{ $dateToString: { format: "%Y-%m-%d", date: "$date" } }, date],
+      },
+    });
+
+    res.json({ count });
+  } catch (error) {
+    console.error("❌ getAppointmentCountByDate error:", error);
+    res.status(500).json({ message: "Failed to fetch count" });
   }
 };
 
@@ -234,7 +264,7 @@ const getDoctorAppointments = async (req, res) => {
         contact: appt.patient.contact,
       },
       issue: appt.issue,
-      date: appt.date.toISOString().split("T")[0], // Return date as YYYY-MM-DD
+      date: appt.date.toISOString().split("T")[0],
       time: appt.time,
       status: appt.status,
     }));
@@ -250,6 +280,7 @@ module.exports = {
   getSpecialties,
   getDoctorsBySpecialty,
   bookAppointment,
+  getAppointmentCountByDate,
   getPatientAppointments,
   cancelAppointment,
   acceptAppointment,

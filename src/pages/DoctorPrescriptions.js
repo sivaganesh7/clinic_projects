@@ -3,6 +3,7 @@ import { FileText } from "lucide-react";
 import axios from "axios";
 import DoctorNavbar from "../components/Doctor/DoctorNavbar";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
 
 const DoctorPrescriptions = () => {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -49,6 +50,9 @@ const DoctorPrescriptions = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 p-6">
       <DoctorNavbar />
+             <div className="my-5">       
+        <BackButton/>
+        </div>
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl font-extrabold mb-8 text-gray-900 tracking-wide animate-fade-in">
           My Prescriptions

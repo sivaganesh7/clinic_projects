@@ -79,7 +79,13 @@ const PatientDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-xl grid grid-cols-1 gap-6 text-lg">
+      <div className="text-center mb-8">
+  <h1 className="text-2xl md:text-3xl font-bold text-gray-700">
+    Patients can only book 2 appointments per day
+  </h1>
+</div>
+
+        {/* <div className="bg-white p-6 rounded-xl shadow-xl grid grid-cols-1 gap-6 text-lg">
           <div className="flex justify-between items-center">
             <span className="text-gray-700">📌 Upcoming Appointments</span>
             <span className="font-bold text-blue-600">{patient.upcomingAppointments || 0}</span>
@@ -92,7 +98,7 @@ const PatientDashboard = () => {
             <span className="text-gray-700">💊 Active Prescriptions</span>
             <span className="font-bold text-purple-600">{patient.activePrescriptions || 0}</span>
           </div>
-        </div>
+        </div> */}
       </main>
     </div>
   );

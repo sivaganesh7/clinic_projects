@@ -1,64 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import PatientNavbar from '../components/Patient/PatientNavbar';
+import React from "react";
+import PatientNavbar from "../components/Patient/PatientNavbar";
+import PatientBackButton from "../components/Patient/PatientBackButton";
 
-const PatientFeedbacks = () => {
-  const [feedbacks, setFeedbacks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    const fetchFeedbacks = async () => {
-      try {
-        const token = localStorage.getItem('patientToken');
-        const res = await axios.get('http://localhost:5000/api/feedbacks/patient/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setFeedbacks(res.data);
-      } catch (err) {
-        console.error(err);
-        setError('Failed to load feedbacks.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFeedbacks();
-  }, []);
+const PatientFeedback = () => {
+  const upcomingFeatures = [
+    "Enhanced patient feedback portal with real-time submission.",
+    "Personalized feedback summaries for patients.",
+    "Integration with telehealth platforms for seamless feedback.",
+    "Reward system for consistent patient feedback.",
+    "Multi-language support for global accessibility."
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-100">
+    <div>
       <PatientNavbar />
-      <div className="max-w-4xl mx-auto mt-8 px-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">My Feedbacks</h1>
-        {loading ? (
-          <p className="text-center text-gray-500">Loading...</p>
-        ) : error ? (
-          <p className="text-center text-red-500">{error}</p>
-        ) : feedbacks.length === 0 ? (
-          <p className="text-center text-gray-500">You haven't submitted any feedback yet.</p>
-        ) : (
-          feedbacks.map((fb) => (
-            <div
-              key={fb._id}
-              className="bg-white rounded-lg shadow p-4 mb-4 border-l-4 border-blue-500"
-            >
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-xl font-semibold text-blue-700">
-                  Dr. {fb.doctor?.name || 'Doctor'} ({fb.doctor?.specialization || 'Specialist'})
-                </h2>
-                <span className="text-sm text-gray-500">
-                  {new Date(fb.createdAt).toLocaleDateString()}
-                </span>
-              </div>
-              <p className="text-sm text-gray-600 mb-1">Rating: ⭐ {fb.rating} / 5</p>
-              {fb.comment && <p className="text-gray-700 italic">“{fb.comment}”</p>}
+             <div className="my-5">       
+        <PatientBackButton/>
+        </div>
+  
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-purple-100 p-6">
+      <div className="max-w-xl w-full bg-white rounded-xl shadow-2xl p-8 text-center">
+        <h3 className="text-2xl font-bold text-indigo-900 mb-6">Upcoming Features</h3>
+        <div className="space-y-4">
+          {upcomingFeatures.map((feature, index) => (
+            <div key={index} className="p-4 bg-indigo-50 rounded-lg border border-indigo-200 hover:bg-indigo-100 transition-colors">
+              <p className="text-gray-800 font-medium">{feature}</p>
             </div>
-          ))
-        )}
+          ))}
+        </div>
       </div>
     </div>
+      </div>
   );
 };
 
-export default PatientFeedbacks;
+export default PatientFeedback;

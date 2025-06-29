@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PatientNavbar from "../components/Patient/PatientNavbar";
 import AppointmentCard from "../components/Patient/AppointmentCard";
+import PatientBackButton from "../components/Patient/PatientBackButton";
 
 const PatientAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -42,8 +43,12 @@ const PatientAppointments = () => {
   const filtered = appointments.filter((a) => a.status === activeTab);
 
   return (
+    <div>
+          <PatientNavbar />
+                 <div className="my-5">       
+        <PatientBackButton/>
+        </div>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <PatientNavbar />
 
       <div className="max-w-5xl mx-auto">
         <h2 className="text-4xl font-extrabold mb-6 text-gray-800 tracking-tight animate-fade-in">
@@ -89,6 +94,7 @@ const PatientAppointments = () => {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 };
