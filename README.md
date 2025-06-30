@@ -167,11 +167,6 @@ VITE_API_BASE_URL=https://meditrack-api.onrender.com
 
 ---
 
-## 📸 UI Screenshots (Optional - Add your images)
-
-<details>
-<summary>📷 Click to expand UI Previews</summary>
-
 <!-- Add image links below -->
 <!-- ![Doctor Dashboard](assets/doctor_dashboard.png) -->
 
