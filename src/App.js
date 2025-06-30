@@ -20,7 +20,6 @@ import DoctorFeedback from './pages/DoctorFeedback';
 
 function App() {
   return (
-    // ✅ Wrap the entire app inside DoctorProvider
     <DoctorProvider>
       <Router>
         <Routes>
@@ -40,7 +39,6 @@ function App() {
           <Route path="/doctor-profile" element={<DoctorProfile />} />
           <Route path="/doctor-feedback" element={<DoctorFeedback />} />
 
-          {/* ✅ Protect sensitive routes */}
           <Route
             path="/patient-dashboard"
             element={
