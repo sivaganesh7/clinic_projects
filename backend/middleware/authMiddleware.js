@@ -13,10 +13,8 @@ const authMiddleware = (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    // 2. Verify token and extract payload
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // 3. Attach user info to request object
     req.user = {
       userId: decoded.userId || decoded.id || decoded._id,
       role: decoded.role || "user",

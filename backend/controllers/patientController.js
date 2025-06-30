@@ -2,7 +2,7 @@ const Patient = require("../models/Patient");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// ✅ REGISTER PATIENT
+// REGISTER PATIENT
 const registerPatient = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
@@ -29,7 +29,6 @@ const registerPatient = async (req, res) => {
   }
 };
 
-// ✅ LOGIN PATIENT
 const loginPatient = async (req, res) => {
   const { email, password } = req.body;
 
@@ -57,7 +56,6 @@ const loginPatient = async (req, res) => {
   }
 };
 
-// ✅ GET LOGGED-IN PATIENT PROFILE
 // GET /api/patient/me
 const getLoggedInPatient = async (req, res) => {
   try {
@@ -76,5 +74,5 @@ const getLoggedInPatient = async (req, res) => {
 module.exports = {
   registerPatient,
   loginPatient,
-  getLoggedInPatient, // ✅ Add this line
+  getLoggedInPatient, 
 };

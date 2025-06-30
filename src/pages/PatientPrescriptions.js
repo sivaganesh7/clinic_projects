@@ -196,8 +196,8 @@ Notes: ${prescription.notes || 'N/A'}
                       {showFormId === prescription._id && (
                         <form
                           onSubmit={(e) => {
-                            e.preventDefault(); // ✅ Prevent default form submission
-                            alert("⚠️ Feedback feature coming soon!"); // ✅ Just show info
+                            e.preventDefault(); 
+                            alert("⚠️ Feedback feature coming soon!"); 
                           }}
                           className="mt-4 bg-blue-100 p-4 rounded-md w-full"
                         >

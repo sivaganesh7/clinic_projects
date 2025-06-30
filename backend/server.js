@@ -3,14 +3,13 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json()); // Parse JSON bodies
+app.use(express.json()); 
 
 // Import routes
 const doctorRoutes = require("./routes/doctorRoutes");
@@ -19,17 +18,13 @@ const appointmentRoutes = require("./routes/appointmentRoutes");
 const authMiddleware = require("./middleware/authMiddleware");
 const prescriptionRoutes = require("./routes/prescriptionRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
-// Add feedback routes
 
-// Mount routes
 app.use("/api/doctor", doctorRoutes);
-
 app.use("/api/patient", patientRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/prescriptions", authMiddleware, prescriptionRoutes);
-// app.js or server.js
 app.use("/api/feedbacks", feedbackRoutes);
-// Add feedback routes with auth
+
 
 // Default route
 app.get("/", (req, res) => {
@@ -54,14 +49,14 @@ const connectToDatabase = async () => {
     console.log("✅ Successfully connected to MongoDB");
   } catch (error) {
     console.error("❌ Failed to connect to MongoDB:", error.message);
-    process.exit(1); // Exit if database connection fails
+    process.exit(1);
   }
 };
 
 // Start the server
 const PORT = process.env.PORT || 5000;
 const startServer = async () => {
-  await connectToDatabase(); // Ensure DB connection before starting server
+  await connectToDatabase(); 
   app.listen(PORT, () => {
     const currentTime = new Date().toLocaleString("en-IN", {
       timeZone: "Asia/Kolkata",

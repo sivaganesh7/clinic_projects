@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-// Create context
 const DoctorContext = createContext();
 
 // Custom hook to consume context

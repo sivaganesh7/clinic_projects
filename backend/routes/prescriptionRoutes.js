@@ -30,8 +30,6 @@ router.post("/", authMiddleware, async (req, res) => {
 
     await newPrescription.save();
 
-    // Optionally update the Appointment with the prescriptionId (if supported by your schema)
-    // await Appointment.findByIdAndUpdate(appointmentId, { prescriptionId: newPrescription._id });
 
     res.status(201).json({
       message: "Prescription added successfully",
@@ -49,7 +47,7 @@ router.post("/", authMiddleware, async (req, res) => {
       },
       appointment: {
         _id: appointmentId,
-        prescriptionId: newPrescription._id, // Added to inform frontend of the link
+        prescriptionId: newPrescription._id, 
       },
     });
   } catch (err) {
@@ -120,7 +118,6 @@ router.get("/doctor/me", authMiddleware, async (req, res) => {
   }
 });
 
-// GET: Fetch prescriptions by doctor ID (optional, for admin)
 router.get("/doctor/:id", authMiddleware, async (req, res) => {
   try {
     const prescriptions = await Prescription.find({ doctor: req.params.id })

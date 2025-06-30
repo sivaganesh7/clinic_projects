@@ -7,13 +7,12 @@ const auth = (allowedRoles = []) => (req, res, next) => {
     return res.status(401).json({ message: "No token provided, authorization denied" });
   }
 
-  // Handle different token formats (e.g., "Bearer token" or just "token")
   if (token.startsWith("Bearer ")) {
-    token = token.split(" ")[1]; // Extract token after "Bearer "
+    token = token.split(" ")[1];
   } else if (token.startsWith("Token ")) {
-    token = token.split(" ")[1]; // Handle alternative "Token " prefix
+    token = token.split(" ")[1]; 
   } else {
-    token = token; // Use as is if no prefix
+    token = token;
   }
 
   if (!token) {
@@ -24,7 +23,6 @@ const auth = (allowedRoles = []) => (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
 
-    // Check if role is required and validate
     if (allowedRoles.length > 0 && !allowedRoles.includes(decoded.role)) {
       return res.status(403).json({ message: "Forbidden: Insufficient role permissions" });
     }

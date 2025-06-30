@@ -22,7 +22,7 @@ const appointmentSchema = new mongoose.Schema(
       trim: true,
       validate: {
         validator: function (v) {
-          // Validate 24hr format (HH:MM), e.g., "14:30"
+
           return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(v);
         },
         message: props => `${props.value} is not a valid time in 24hr format (HH:MM)!`,
@@ -45,12 +45,12 @@ const appointmentSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt automatically
+    timestamps: true, 
   }
 );
 
 // Indexes for performance
-appointmentSchema.index({ doctor: 1, status: 1 }); // Index for doctor-specific status queries
-appointmentSchema.index({ patient: 1, date: 1 }); // Index for patient date-based queries
+appointmentSchema.index({ doctor: 1, status: 1 }); 
+appointmentSchema.index({ patient: 1, date: 1 }); 
 
 module.exports = mongoose.model("Appointment", appointmentSchema);
