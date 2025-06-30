@@ -1,70 +1,193 @@
-# Getting Started with Create React App
+<h1 align="center">🩺 MediTrack – Full Stack Medical Appointment & Prescription System</h1>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<p align="center">
+  <b>A role-based medical platform for Doctors and Patients built using MERN stack</b><br/>
+  <i>Appointments • Prescriptions • Secure Auth • Real-time Management</i>
+</p>
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## ✨ Features
 
-### `npm start`
+### 🧑‍⚕️ Doctor Features
+- ✅ View, accept, complete, and reject patient appointments
+- 💊 Add prescriptions after consultations
+- 📋 View patient feedback (optional or upcoming)
+- 📊 Personalized role-based dashboard
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 👨‍⚕️ Patient Features
+- 📝 Register and log in with validation
+- 📅 Book up to 2 appointments per day
+- 🔎 View appointment history and prescription details
+- ⭐ Give feedback after consultations(upcomming feature)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🔐 Authentication & Security
+- 🔑 JWT-based secure login system
+- 🧱 Role-based protected routes with middleware
+- 🔒 Passwords encrypted using bcrypt
+- 🚫 Patients can’t access doctor routes (and vice versa)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 🛠️ Tech Stack
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Frontend     | Backend       | Database   | Tools & Auth              |
+|--------------|----------------|------------|---------------------------|
+| ⚛️ React.js | 🚀 Express.js | 🍃 MongoDB | JWT 🔐, Bcrypt 🔑, Axios 🌐 |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 📁 Folder Structure
 
-### `npm run eject`
+```bash
+MediTrack/
+├── backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── middleware/
+│   └── routes/
+├── frontend/
+│   ├── components/
+│   ├── pages/
+│   ├── layouts/
+│   └── App.jsx
+└── README.md
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🚀 Getting Started (Local Setup)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 🔧 Prerequisites
+- Node.js (v16+)
+- MongoDB (local or Atlas)
+- npm or yarn
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+### 📦 Backend Setup
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+cd backend
+npm install
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+🔐 **Create a `.env` file:**
 
-### Code Splitting
+```ini
+PORT=5000
+MONGODB_URI=your_mongo_connection_string
+JWT_SECRET=your_super_secret_key
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+▶️ **Start the backend server:**
 
-### Analyzing the Bundle Size
+```bash
+npm install
+npm run dev
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+### 💻 Frontend Setup
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+npx create-react-app Your-App-Name
+cd frontend
+npm install
+npm start
+```
 
-### Advanced Configuration
+Frontend will run on:  
+👉 http://localhost:3000
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+> Ensure proxy or CORS is handled for connecting backend & frontend.
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🌐 Deployment Guide
 
-### `npm run build` fails to minify
+### 🔹 Deploy Backend on Render
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Go to https://render.com  
+2. Click **New Web Service**  
+3. Connect your GitHub repo or paste the backend code manually  
+4. Set environment variables:
+
+```env
+PORT=5000
+MONGODB_URI=<your MongoDB Atlas URI>
+JWT_SECRET=<your secret key>
+```
+
+5. Build Command: `npm install`  
+6. Start Command: `npm run dev` or `node index.js`  
+7. Wait for the Render URL (e.g., `https://meditrack-api.onrender.com`)
+
+---
+
+### 🔸 Deploy Frontend on Vercel
+
+1. Go to https://vercel.com  
+2. Connect GitHub repo or import frontend folder manually  
+3. Set Project Settings:
+
+```
+Framework: React / Vite
+Output directory: dist
+```
+
+4. Add `.env` file or Vite env variables:
+
+```env
+VITE_API_BASE_URL=https://meditrack-api.onrender.com
+```
+
+5. Deploy. You'll get a frontend URL like:  
+👉 https://meditrack.vercel.app
+
+---
+
+## 🧪 Sample .env Files
+
+### Backend `.env`
+
+```ini
+PORT=5000
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/meditrack
+JWT_SECRET=super_secure_key
+```
+
+### Frontend `.env` (`frontend/.env`)
+
+```env
+VITE_API_BASE_URL=https://meditrack-api.onrender.com
+```
+
+---
+
+## 📸 UI Screenshots (Optional - Add your images)
+
+<details>
+<summary>📷 Click to expand UI Previews</summary>
+
+<!-- Add image links below -->
+<!-- ![Doctor Dashboard](assets/doctor_dashboard.png) -->
+
+</details>
+
+---
+
+## 🙌 Contributions
+
+Contributions, issues, and feature requests are welcome!  
+Feel free to fork or raise PRs 💡
+
+---
+
+### ✅ Tips:
+- Replace `your_mongo_connection_string`, `your_super_secret_key`, and `yourwebsite.com` with actual values.
+- Keep `.env` files secure — do not commit them publicly.
+
+---
