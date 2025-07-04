@@ -2,6 +2,7 @@
   "name": "patient_doctor",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5000",   // ✅ Correct placement
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -16,7 +17,7 @@
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"   
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
