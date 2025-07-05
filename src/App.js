@@ -23,22 +23,14 @@ function App() {
     <DoctorProvider>
       <Router>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Homepage />} />
           <Route path="/patient-login" element={<PatientLogin />} />
           <Route path="/doctor-login" element={<DoctorLogin />} />
           <Route path="/patient-register" element={<PatientRegister />} />
           <Route path="/doctor-register" element={<DoctorRegister />} />
-          <Route path="/book-appointment" element={<BookAppointment />} />
-          <Route path="/patient-appointments" element={<PatientAppointments />} />
-          <Route path="/patient-dashboard" element={<PatientDashboard />} />
-          <Route path="/prescriptions" element={<PatientPrescriptions />} />
-          <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
-          <Route path="/doctor-appointment" element={<DoctorAppointments />} />
-          <Route path="/doctor-prescriptions" element={<DoctorPrescriptions />} />
-          <Route path="/patient-feedback" element={<PatientFeedbacks />} />
-          <Route path="/doctor-profile" element={<DoctorProfile />} />
-          <Route path="/doctor-feedback" element={<DoctorFeedback />} />
 
+          {/* Protected Patient Routes */}
           <Route
             path="/patient-dashboard"
             element={
@@ -52,6 +44,72 @@ function App() {
             element={
               <ProtectedRoute>
                 <BookAppointment />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/patient-appointments"
+            element={
+              <ProtectedRoute>
+                <PatientAppointments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/prescriptions"
+            element={
+              <ProtectedRoute>
+                <PatientPrescriptions />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/patient-feedback"
+            element={
+              <ProtectedRoute>
+                <PatientFeedbacks />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Protected Doctor Routes */}
+          <Route
+            path="/doctor-dashboard"
+            element={
+              <ProtectedRoute>
+                <DoctorDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/doctor-appointment"
+            element={
+              <ProtectedRoute>
+                <DoctorAppointments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/doctor-prescriptions"
+            element={
+              <ProtectedRoute>
+                <DoctorPrescriptions />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/doctor-feedback"
+            element={
+              <ProtectedRoute>
+                <DoctorFeedback />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/doctor-profile"
+            element={
+              <ProtectedRoute>
+                <DoctorProfile />
               </ProtectedRoute>
             }
           />

@@ -24,10 +24,11 @@ const DoctorNavbar = () => {
     { label: "Feedback", path: "/doctor-feedback", icon: MessageSquare },
   ];
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  navigate("/", { replace: true }); // ✅ replaces history entry
+};
+
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
