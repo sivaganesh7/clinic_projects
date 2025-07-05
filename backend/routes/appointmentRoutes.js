@@ -13,12 +13,8 @@ const {
   rejectAppointment
 } = require("../controllers/appointmentController");
 
-// ───────────── PATIENT ROUTES ─────────────
-
-// GET all distinct doctor specialties
 router.get("/specialties", authMiddleware, getSpecialties);
 
-// GET doctors by selected specialty
 router.get("/doctors/:specialty", authMiddleware, getDoctorsBySpecialty);
 
 // POST book a new appointment (limit 2/day)

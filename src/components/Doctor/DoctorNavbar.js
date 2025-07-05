@@ -26,7 +26,7 @@ const DoctorNavbar = () => {
 
 const handleLogout = () => {
   localStorage.removeItem("token");
-  navigate("/", { replace: true }); // ✅ replaces history entry
+  navigate("/", { replace: true }); 
 };
 
 
