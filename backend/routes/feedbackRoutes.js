@@ -6,5 +6,6 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 router.post('/', authMiddleware, feedbackController.submitFeedback);
 router.get('/patient/me', authMiddleware, feedbackController.getPatientFeedbacks);
+router.get('/doctor/me', authMiddleware, feedbackController.getDoctorFeedbacks);
 
 module.exports = router;

@@ -23,18 +23,18 @@ function App() {
     <DoctorProvider>
       <Router>
         <Routes>
-          {/* Public Routes */}
+          {/* Public routes */}
           <Route path="/" element={<Homepage />} />
           <Route path="/patient-login" element={<PatientLogin />} />
           <Route path="/doctor-login" element={<DoctorLogin />} />
           <Route path="/patient-register" element={<PatientRegister />} />
           <Route path="/doctor-register" element={<DoctorRegister />} />
 
-          {/* Protected Patient Routes */}
+          {/* Patient protected routes */}
           <Route
             path="/patient-dashboard"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute tokenKey="patientToken" redirectTo="/patient-login">
                 <PatientDashboard />
               </ProtectedRoute>
             }
@@ -42,7 +42,7 @@ function App() {
           <Route
             path="/book-appointment"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute tokenKey="patientToken" redirectTo="/patient-login">
                 <BookAppointment />
               </ProtectedRoute>
             }
@@ -50,7 +50,7 @@ function App() {
           <Route
             path="/patient-appointments"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute tokenKey="patientToken" redirectTo="/patient-login">
                 <PatientAppointments />
               </ProtectedRoute>
             }
@@ -58,7 +58,7 @@ function App() {
           <Route
             path="/prescriptions"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute tokenKey="patientToken" redirectTo="/patient-login">
                 <PatientPrescriptions />
               </ProtectedRoute>
             }
@@ -66,17 +66,17 @@ function App() {
           <Route
             path="/patient-feedback"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute tokenKey="patientToken" redirectTo="/patient-login">
                 <PatientFeedbacks />
               </ProtectedRoute>
             }
           />
 
-          {/* Protected Doctor Routes */}
+          {/* Doctor protected routes */}
           <Route
             path="/doctor-dashboard"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute tokenKey="token" redirectTo="/doctor-login">
                 <DoctorDashboard />
               </ProtectedRoute>
             }
@@ -84,7 +84,7 @@ function App() {
           <Route
             path="/doctor-appointment"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute tokenKey="token" redirectTo="/doctor-login">
                 <DoctorAppointments />
               </ProtectedRoute>
             }
@@ -92,24 +92,24 @@ function App() {
           <Route
             path="/doctor-prescriptions"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute tokenKey="token" redirectTo="/doctor-login">
                 <DoctorPrescriptions />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/doctor-feedback"
-            element={
-              <ProtectedRoute>
-                <DoctorFeedback />
               </ProtectedRoute>
             }
           />
           <Route
             path="/doctor-profile"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute tokenKey="token" redirectTo="/doctor-login">
                 <DoctorProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/doctor-feedback"
+            element={
+              <ProtectedRoute tokenKey="token" redirectTo="/doctor-login">
+                <DoctorFeedback />
               </ProtectedRoute>
             }
           />

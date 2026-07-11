@@ -16,9 +16,13 @@ export const DoctorProvider = ({ children }) => {
   const [doctorInfo, setDoctorInfo] = useState(null);
 
   useEffect(() => {
+    // Only fetch doctor profile if doctor token exists
+    // Patient uses 'patientToken', doctor uses 'token'
     const token = localStorage.getItem("token");
-    if (!token) {
-      console.warn("⚠️ No token found in localStorage.");
+    const patientToken = localStorage.getItem("patientToken");
+
+    // If there's a patientToken but no doctor token, skip fetching
+    if (!token || patientToken) {
       return;
     }
 
@@ -34,13 +38,13 @@ export const DoctorProvider = ({ children }) => {
 
         if (!res.ok || !contentType.includes("application/json")) {
           const text = await res.text();
-          throw new Error(`❌ API Error (${res.status}): ${text}`);
+          throw new Error(`API Error (${res.status}): ${text}`);
         }
 
         const data = await res.json();
         setDoctorInfo(data);
       } catch (error) {
-        console.error("❌ Error fetching doctor info:", error.message);
+        console.error("Error fetching doctor info:", error.message);
       }
     };
 

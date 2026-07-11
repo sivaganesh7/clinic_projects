@@ -64,12 +64,62 @@ exports.submitFeedback = async (req, res) => {
 exports.getPatientFeedbacks = async (req, res) => {
   try {
     const feedbacks = await Feedback.find({ patientId: req.user.userId })
-      .populate('doctorId', 'name')
-      .populate('appointmentId', 'date');
+      .populate('doctorId', 'firstName lastName')
+      .populate('appointmentId', 'date time issue');
 
-    res.json(feedbacks);
+    const formatted = feedbacks.map((fb) => ({
+      _id: fb._id,
+      doctor: fb.doctorId
+        ? `Dr. ${fb.doctorId.firstName} ${fb.doctorId.lastName}`
+        : 'Unknown Doctor',
+      appointment: fb.appointmentId
+        ? {
+            date: fb.appointmentId.date,
+            time: fb.appointmentId.time,
+            issue: fb.appointmentId.issue,
+          }
+        : null,
+      rating: fb.rating,
+      comments: fb.comments,
+      submittedAt: fb.submittedAt,
+    }));
+
+    res.json(formatted);
   } catch (error) {
     console.error('Error fetching feedbacks:', error.message);
+    res.status(500).json({
+      message: 'Server error',
+      error: error.message,
+    });
+  }
+};
+
+exports.getDoctorFeedbacks = async (req, res) => {
+  try {
+    const feedbacks = await Feedback.find({ doctorId: req.user.userId })
+      .populate('patientId', 'firstName lastName')
+      .populate('appointmentId', 'date time issue');
+
+    const formatted = feedbacks.map((fb) => ({
+      _id: fb._id,
+      patient: fb.patientId
+        ? `${fb.patientId.firstName} ${fb.patientId.lastName}`
+        : 'Unknown Patient',
+      appointment: fb.appointmentId
+        ? {
+            date: fb.appointmentId.date,
+            time: fb.appointmentId.time,
+            issue: fb.appointmentId.issue,
+          }
+        : null,
+      rating: fb.rating,
+      comments: fb.comments,
+      submittedAt: fb.submittedAt,
+    }));
+
+    res.json(formatted);
+  } catch (error) {
+    console.error('Error fetching doctor feedbacks:', error.message);
     res.status(500).json({
       message: 'Server error',
       error: error.message,

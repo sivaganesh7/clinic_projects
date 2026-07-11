@@ -6,11 +6,13 @@ const {
   getSpecialties,
   getDoctorsBySpecialty,
   bookAppointment,
+  getAppointmentCountByDate,
   getPatientAppointments,
   cancelAppointment,
   acceptAppointment,
   completeAppointment,
-  rejectAppointment
+  rejectAppointment,
+  getDoctorAppointments,
 } = require("../controllers/appointmentController");
 
 router.get("/specialties", authMiddleware, getSpecialties);
@@ -19,6 +21,9 @@ router.get("/doctors/:specialty", authMiddleware, getDoctorsBySpecialty);
 
 // POST book a new appointment (limit 2/day)
 router.post("/book", authMiddleware, bookAppointment);
+
+// GET appointment count by date for logged-in patient
+router.get("/count/:date", authMiddleware, getAppointmentCountByDate);
 
 // GET all appointments for logged-in patient
 router.get("/my", authMiddleware, getPatientAppointments);
@@ -29,6 +34,9 @@ router.delete("/cancel/:id", authMiddleware, cancelAppointment);
 
 // ───────────── DOCTOR ROUTES ─────────────
 
+// GET all appointments for logged-in doctor
+router.get("/me", authMiddleware, getDoctorAppointments);
+
 // PATCH doctor accepts an appointment (status → in-progress)
 router.patch("/accept/:id", authMiddleware, acceptAppointment);
 
@@ -38,10 +46,6 @@ router.patch("/complete/:id", authMiddleware, completeAppointment);
 // DELETE doctor rejects (deletes) appointment
 router.delete("/reject/:id", authMiddleware, rejectAppointment);
 
-const { getDoctorAppointments } = require("../controllers/appointmentController");
-
-// ...
-router.get("/me", authMiddleware, getDoctorAppointments); // Add this
-
 
 module.exports = router;
+

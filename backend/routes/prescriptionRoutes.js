@@ -69,6 +69,7 @@ router.get("/patient/me", authMiddleware, async (req, res) => {
     const formatted = prescriptions.map((p) => ({
       _id: p._id,
       doctor: {
+        _id: p.doctor._id,
         name: `${p.doctor.firstName} ${p.doctor.lastName}`,
       },
       appointmentId: p.appointment?._id,
