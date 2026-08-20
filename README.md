@@ -1,7 +1,7 @@
 <div align="center">
 
 # 🩺 MediTrack-Lite
-### Enterprise-Grade Healthcare Appointment & Digital Prescription Management Platform
+### Full-Stack Healthcare Appointment & Digital Prescription Management Platform
 
 [![Node.js](https://img.shields.io/badge/Node.js-v18%2B-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-v4.19-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
