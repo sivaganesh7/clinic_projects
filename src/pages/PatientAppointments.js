@@ -36,7 +36,7 @@ const PatientAppointments = () => {
       return;
     }
     try {
-      const res = await axios.delete(`${process.env.REACT_APP_API_URL}/api/appointments/cancel/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/appointments/cancel/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCancelMessage("Appointment cancelled successfully.");
@@ -51,6 +51,7 @@ const PatientAppointments = () => {
 
   useEffect(() => {
     fetchAppointments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const matchesTab = (appt, tab) => {

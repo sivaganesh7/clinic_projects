@@ -87,7 +87,16 @@ const DoctorDashboard = () => {
     };
 
     fetchDashboardData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-500">
+        Loading doctor dashboard...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
