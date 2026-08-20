@@ -17,18 +17,15 @@ export const DoctorProvider = ({ children }) => {
 
   useEffect(() => {
     // Only fetch doctor profile if doctor token exists
-    // Patient uses 'patientToken', doctor uses 'token'
     const token = localStorage.getItem("token");
-    const patientToken = localStorage.getItem("patientToken");
 
-    // If there's a patientToken but no doctor token, skip fetching
-    if (!token || patientToken) {
+    if (!token) {
       return;
     }
 
     const fetchDoctorInfo = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/doctor/profile", {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/doctor/profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

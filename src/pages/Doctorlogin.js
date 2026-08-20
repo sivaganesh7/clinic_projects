@@ -9,7 +9,7 @@ const DoctorLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  axios.defaults.baseURL = 'http://localhost:5000'; // Backend server URL
+  axios.defaults.baseURL = process.env.REACT_APP_API_URL; // Backend server URL
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,6 +39,7 @@ const DoctorLogin = () => {
       const fullName = `${doctor.firstName} ${doctor.lastName}`;
 
       // Store in localStorage
+      localStorage.removeItem('patientToken');
       localStorage.setItem('token', token);
       localStorage.setItem('doctorName', fullName);
 

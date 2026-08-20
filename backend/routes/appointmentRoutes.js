@@ -4,6 +4,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 const {
   getSpecialties,
+  getAllDoctors,
   getDoctorsBySpecialty,
   bookAppointment,
   getAppointmentCountByDate,
@@ -15,8 +16,9 @@ const {
   getDoctorAppointments,
 } = require("../controllers/appointmentController");
 
+// Public / Patient accessible doctor discovery
 router.get("/specialties", authMiddleware, getSpecialties);
-
+router.get("/doctors", authMiddleware, getAllDoctors);
 router.get("/doctors/:specialty", authMiddleware, getDoctorsBySpecialty);
 
 // POST book a new appointment (limit 2/day)
@@ -28,24 +30,24 @@ router.get("/count/:date", authMiddleware, getAppointmentCountByDate);
 // GET all appointments for logged-in patient
 router.get("/my", authMiddleware, getPatientAppointments);
 
-// DELETE cancel an appointment (by patient)
+// DELETE / PATCH cancel an appointment (by patient)
 router.delete("/cancel/:id", authMiddleware, cancelAppointment);
-
+router.patch("/cancel/:id", authMiddleware, cancelAppointment);
 
 // ───────────── DOCTOR ROUTES ─────────────
 
 // GET all appointments for logged-in doctor
 router.get("/me", authMiddleware, getDoctorAppointments);
 
-// PATCH doctor accepts an appointment (status → in-progress)
+// PATCH doctor accepts an appointment (status → accepted)
 router.patch("/accept/:id", authMiddleware, acceptAppointment);
 
 // PATCH doctor completes an appointment (status → completed)
 router.patch("/complete/:id", authMiddleware, completeAppointment);
 
-// DELETE doctor rejects (deletes) appointment
+// DELETE / PATCH doctor rejects appointment (status → rejected)
 router.delete("/reject/:id", authMiddleware, rejectAppointment);
-
+router.patch("/reject/:id", authMiddleware, rejectAppointment);
 
 module.exports = router;
 

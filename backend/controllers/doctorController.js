@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 // Register new doctor
 exports.registerDoctor = async (req, res) => {
   try {
-    const { email, password, firstName, lastName, specialization } = req.body;
+    const { email, password, firstName, lastName, specialization, qualification, experience, phone, bio } = req.body;
 
     const existing = await Doctor.findOne({ email });
     if (existing) return res.status(400).json({ message: "Email already exists" });
@@ -17,6 +17,10 @@ exports.registerDoctor = async (req, res) => {
       firstName,
       lastName,
       specialization,
+      qualification: qualification || "",
+      experience: experience || "",
+      phone: phone || "",
+      bio: bio || "",
     });
 
     console.log("✅ Doctor Registered:", doctor.email);
@@ -39,9 +43,9 @@ exports.loginDoctor = async (req, res) => {
     if (!valid) return res.status(400).json({ message: "Invalid credentials" });
 
     const token = jwt.sign(
-      { userId: doctor._id, role: doctor.role },
+      { userId: doctor._id, role: doctor.role || "doctor" },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "24h" }
     );
 
     res.status(200).json({
@@ -53,11 +57,23 @@ exports.loginDoctor = async (req, res) => {
         lastName: doctor.lastName,
         email: doctor.email,
         specialization: doctor.specialization,
+        qualification: doctor.qualification,
+        experience: doctor.experience,
       },
     });
   } catch (err) {
     console.error("❌ Login Error:", err.message);
     res.status(500).json({ error: err.message });
+  }
+};
+
+// Get all doctors (for discovery)
+exports.getAllDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find().select("-password").sort({ firstName: 1 });
+    res.json(doctors);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching doctors" });
   }
 };
 
@@ -77,11 +93,13 @@ exports.updateDoctorProfile = async (req, res) => {
   try {
     const updateFields = { ...req.body };
     delete updateFields.email; // Prevent email updates
+    delete updateFields.password; // Prevent password updates via profile endpoint
+    delete updateFields.role; // Prevent role escalation
 
     const updated = await Doctor.findByIdAndUpdate(
       req.user.userId,
       updateFields,
-      { new: true }
+      { new: true, runValidators: true }
     ).select("-password");
 
     if (!updated) {
@@ -90,6 +108,6 @@ exports.updateDoctorProfile = async (req, res) => {
 
     res.json(updated);
   } catch (error) {
-    res.status(500).json({ message: "Error updating profile" });
+    res.status(500).json({ message: "Error updating profile", error: error.message });
   }
 };

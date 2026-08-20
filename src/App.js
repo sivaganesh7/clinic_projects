@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Homepage from './pages/Homepage';
 import PatientLogin from './pages/Patientlogin';
 import DoctorLogin from './pages/Doctorlogin';
@@ -25,6 +25,7 @@ function App() {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Homepage />} />
+          <Route path="/login" element={<Navigate to="/patient-login" replace />} />
           <Route path="/patient-login" element={<PatientLogin />} />
           <Route path="/doctor-login" element={<DoctorLogin />} />
           <Route path="/patient-register" element={<PatientRegister />} />
@@ -113,6 +114,10 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* Alias & Catch-all routes */}
+          <Route path="/doctor-appointments" element={<Navigate to="/doctor-appointment" replace />} />
+          <Route path="/patient-prescriptions" element={<Navigate to="/prescriptions" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </DoctorProvider>

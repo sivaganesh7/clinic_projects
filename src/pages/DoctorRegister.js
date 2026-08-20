@@ -41,7 +41,7 @@ const DoctorRegister = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/doctor/register', formData);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/doctor/register`, formData);
       alert('Registration successful');
       navigate('/doctor-login');
     } catch (err) {
@@ -109,7 +109,7 @@ const DoctorRegister = () => {
                 type="email"
                 required
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500"
-                placeholder="doctor.email@example.com"
+                placeholder="doctor.email@meditrack.local"
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
               />

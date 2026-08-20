@@ -9,8 +9,11 @@ const patientSchema = new mongoose.Schema({
     unique: true,
     match: [/^.+@meditrack\.local$/, "Email must be @meditrack.local"]
   },
-  password:  { type: String, required: true },
-  role:      { type: String, default: "patient" }
+  phone:       { type: String, trim: true, default: "" },
+  dateOfBirth: { type: String, trim: true, default: "" },
+  gender:      { type: String, trim: true, default: "" },
+  password:    { type: String, required: true },
+  role:        { type: String, default: "patient" }
 });
 
 module.exports = mongoose.model("Patient", patientSchema);

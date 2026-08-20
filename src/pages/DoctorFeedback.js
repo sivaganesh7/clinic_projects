@@ -13,7 +13,7 @@ const DoctorFeedback = () => {
     const fetchFeedbacks = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/feedbacks/doctor/me", {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/feedbacks/doctor/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setFeedbacks(res.data);
@@ -109,7 +109,13 @@ const DoctorFeedback = () => {
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h3 className="font-semibold text-lg text-gray-800">{fb.patient}</h3>
+                      <h3 className="font-semibold text-lg text-gray-800">
+                        {fb.patient?.name ||
+                          (typeof fb.patient === "object"
+                            ? `${fb.patient?.firstName || ""} ${fb.patient?.lastName || ""}`.trim()
+                            : fb.patient) ||
+                          "Patient Consultation"}
+                      </h3>
                       {fb.appointment && (
                         <p className="text-sm text-gray-500 mt-1">
                           Appointment: {new Date(fb.appointment.date).toLocaleDateString()} at {fb.appointment.time}

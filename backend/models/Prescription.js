@@ -6,9 +6,10 @@ const medicineSchema = new mongoose.Schema({
   frequency: {
     type: String,
     required: true,
-    enum: ["Once daily", "Twice daily", "Thrice daily"],
     trim: true,
   },
+  duration: { type: String, trim: true, default: "" },
+  instructions: { type: String, trim: true, default: "" },
 });
 
 const prescriptionSchema = new mongoose.Schema(

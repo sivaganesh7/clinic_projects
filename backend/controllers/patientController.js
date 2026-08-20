@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 // REGISTER PATIENT
 const registerPatient = async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password, phone, dateOfBirth, gender } = req.body;
 
   try {
     const existingPatient = await Patient.findOne({ email });
@@ -19,16 +19,20 @@ const registerPatient = async (req, res) => {
       lastName,
       email,
       password: hashedPassword,
+      phone: phone || "",
+      dateOfBirth: dateOfBirth || "",
+      gender: gender || "",
     });
 
     await newPatient.save();
-    res.status(201).json({ message: "✅Patient registered successfully" });
+    res.status(201).json({ message: "Patient registered successfully" });
   } catch (err) {
     console.error("Registration error:", err);
-    res.status(500).json({ message: "Server error during registration" });
+    res.status(500).json({ message: "Server error during registration", error: err.message });
   }
 };
 
+// LOGIN PATIENT
 const loginPatient = async (req, res) => {
   const { email, password } = req.body;
 
@@ -46,10 +50,20 @@ const loginPatient = async (req, res) => {
     const token = jwt.sign(
       { userId: patient._id, role: "patient" },
       process.env.JWT_SECRET || "defaultsecretkey",
-      { expiresIn: "2h" }
+      { expiresIn: "24h" }
     );
 
-    res.status(200).json({ message: "✅Login successful", token });
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      patient: {
+        id: patient._id,
+        firstName: patient.firstName,
+        lastName: patient.lastName,
+        email: patient.email,
+        phone: patient.phone,
+      },
+    });
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ message: "Server error during login" });
@@ -70,9 +84,34 @@ const getLoggedInPatient = async (req, res) => {
   }
 };
 
+// PUT /api/patient/me
+const updatePatientProfile = async (req, res) => {
+  try {
+    const updateFields = { ...req.body };
+    delete updateFields.email;
+    delete updateFields.password;
+    delete updateFields.role;
+
+    const updated = await Patient.findByIdAndUpdate(
+      req.user.userId,
+      updateFields,
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    if (!updated) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
+
+    res.status(200).json(updated);
+  } catch (error) {
+    console.error("Update patient error:", error);
+    res.status(500).json({ message: "Server error updating profile", error: error.message });
+  }
+};
 
 module.exports = {
   registerPatient,
   loginPatient,
-  getLoggedInPatient, 
+  getLoggedInPatient,
+  updatePatientProfile,
 };

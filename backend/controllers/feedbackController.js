@@ -5,10 +5,16 @@ const mongoose = require('mongoose');
 exports.submitFeedback = async (req, res) => {
   try {
     const { appointmentId, doctorId, rating, comments } = req.body;
+    const patientId = req.user?.userId;
 
     // Validate required fields
     if (!appointmentId || !doctorId || !rating) {
-      return res.status(400).json({ message: 'Missing required fields' });
+      return res.status(400).json({ message: 'Missing required fields: appointmentId, doctorId, rating' });
+    }
+
+    const numRating = Number(rating);
+    if (!numRating || numRating < 1 || numRating > 5) {
+      return res.status(400).json({ message: 'Rating must be an integer between 1 and 5' });
     }
 
     // Validate ObjectId format
@@ -22,12 +28,26 @@ exports.submitFeedback = async (req, res) => {
     // Verify the appointment exists and belongs to this patient
     const appointment = await Appointment.findOne({
       _id: appointmentId,
-      patient: req.user.userId,
+      patient: patientId,
     });
 
     if (!appointment) {
       return res.status(404).json({
         message: 'Appointment not found or does not belong to you',
+      });
+    }
+
+    // Enforce Rule: Feedback is only allowed for COMPLETED appointments
+    if (appointment.status !== 'completed') {
+      return res.status(400).json({
+        message: `Feedback can only be submitted for completed consultations. Current status: '${appointment.status}'.`,
+      });
+    }
+
+    // Verify doctor matches
+    if (appointment.doctor.toString() !== doctorId.toString()) {
+      return res.status(400).json({
+        message: 'Doctor ID does not match the appointment doctor',
       });
     }
 
@@ -42,9 +62,9 @@ exports.submitFeedback = async (req, res) => {
     const feedback = new Feedback({
       appointmentId,
       doctorId,
-      patientId: req.user.userId,
-      rating,
-      comments: comments || '',
+      patientId,
+      rating: numRating,
+      comments: comments ? String(comments).trim() : '',
     });
 
     await feedback.save();
@@ -63,22 +83,27 @@ exports.submitFeedback = async (req, res) => {
 
 exports.getPatientFeedbacks = async (req, res) => {
   try {
-    const feedbacks = await Feedback.find({ patientId: req.user.userId })
-      .populate('doctorId', 'firstName lastName')
-      .populate('appointmentId', 'date time issue');
+    const feedbacks = await Feedback.find({ patientId: req.user?.userId })
+      .populate('doctorId', 'firstName lastName specialization')
+      .populate('appointmentId', 'date time issue status')
+      .sort({ submittedAt: -1 });
 
     const formatted = feedbacks.map((fb) => ({
       _id: fb._id,
       doctor: fb.doctorId
         ? `Dr. ${fb.doctorId.firstName} ${fb.doctorId.lastName}`
-        : 'Unknown Doctor',
+        : 'Doctor',
+      doctorId: fb.doctorId?._id || fb.doctorId,
       appointment: fb.appointmentId
         ? {
+            _id: fb.appointmentId._id,
             date: fb.appointmentId.date,
             time: fb.appointmentId.time,
             issue: fb.appointmentId.issue,
+            status: fb.appointmentId.status,
           }
         : null,
+      appointmentId: fb.appointmentId?._id || fb.appointmentId,
       rating: fb.rating,
       comments: fb.comments,
       submittedAt: fb.submittedAt,
@@ -96,22 +121,27 @@ exports.getPatientFeedbacks = async (req, res) => {
 
 exports.getDoctorFeedbacks = async (req, res) => {
   try {
-    const feedbacks = await Feedback.find({ doctorId: req.user.userId })
+    const feedbacks = await Feedback.find({ doctorId: req.user?.userId })
       .populate('patientId', 'firstName lastName')
-      .populate('appointmentId', 'date time issue');
+      .populate('appointmentId', 'date time issue status')
+      .sort({ submittedAt: -1 });
 
     const formatted = feedbacks.map((fb) => ({
       _id: fb._id,
       patient: fb.patientId
         ? `${fb.patientId.firstName} ${fb.patientId.lastName}`
-        : 'Unknown Patient',
+        : 'Patient',
+      patientId: fb.patientId?._id || fb.patientId,
       appointment: fb.appointmentId
         ? {
+            _id: fb.appointmentId._id,
             date: fb.appointmentId.date,
             time: fb.appointmentId.time,
             issue: fb.appointmentId.issue,
+            status: fb.appointmentId.status,
           }
         : null,
+      appointmentId: fb.appointmentId?._id || fb.appointmentId,
       rating: fb.rating,
       comments: fb.comments,
       submittedAt: fb.submittedAt,

@@ -3,7 +3,8 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
-dotenv.config();
+const path = require("path");
+dotenv.config({ path: path.join(__dirname, ".env") });
 
 const app = express();
 
@@ -31,16 +32,11 @@ app.get("/", (req, res) => {
   res.send("🩺 MediTrack Lite API is running...");
 });
 
-// 404 Handler (for unknown routes)
-app.use((req, res) => {
-  res.status(404).json({ message: "Endpoint not found" });
-});
+// Centralized Error Handling Middleware
+const { notFoundHandler, errorHandler } = require("./middleware/errorMiddleware");
 
-// Global error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Something went wrong on the server" });
-});
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 // Function to connect to MongoDB with retry logic
 const connectToDatabase = async () => {

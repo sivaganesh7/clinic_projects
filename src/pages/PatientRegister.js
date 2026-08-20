@@ -43,7 +43,7 @@ const PatientRegister = () => {
     setSuccess('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/patient/register', {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/patient/register`, {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
@@ -64,7 +64,7 @@ const PatientRegister = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-sm font-bold text-blue-600 px-4 py-2 border border-solid rounded-md bg-red transition-all duration-300 hover:bg-blue-200 hover:text-blue-700 hover:shadow-md"
+          className="flex items-center gap-2 text-sm font-bold text-blue-600 px-4 py-2 border border-blue-200 rounded-md transition-all duration-300 hover:bg-blue-100 hover:text-blue-700 hover:shadow-md"
         >
           ← Back to Home
         </button>

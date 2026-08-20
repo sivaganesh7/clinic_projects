@@ -18,7 +18,7 @@ const PatientPrescriptions = () => {
     const fetchPrescriptions = async () => {
       try {
         const token = localStorage.getItem('patientToken');
-        const response = await axios.get('http://localhost:5000/api/prescriptions/patient/me', {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/prescriptions/patient/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setPrescriptions(response.data.reverse());
@@ -33,7 +33,7 @@ const PatientPrescriptions = () => {
     const fetchFeedbacks = async () => {
       try {
         const token = localStorage.getItem('patientToken');
-        const res = await axios.get('http://localhost:5000/api/feedbacks/patient/me', {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/feedbacks/patient/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const feedbackMap = {};
@@ -103,7 +103,7 @@ Notes: ${prescription.notes || 'N/A'}
     try {
       const token = localStorage.getItem('patientToken');
       await axios.post(
-        'http://localhost:5000/api/feedbacks',
+        `${process.env.REACT_APP_API_URL}/api/feedbacks`,
         {
           appointmentId: prescription.appointmentId,
           doctorId,

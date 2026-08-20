@@ -17,10 +17,10 @@ const DoctorPrescriptions = () => {
     try {
       if (!token) {
         setError("Please log in to view your prescriptions.");
-        setTimeout(() => navigate("/login"), 2000);
+        setTimeout(() => navigate("/doctor-login"), 2000);
         return;
       }
-      const res = await axios.get("http://localhost:5000/api/prescriptions/doctor/me", {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/prescriptions/doctor/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPrescriptions(res.data || []);
@@ -29,7 +29,7 @@ const DoctorPrescriptions = () => {
       console.error("Failed to fetch prescriptions:", err);
       if (err.response?.status === 401) {
         setError("Session expired. Please log in again.");
-        setTimeout(() => navigate("/login"), 2000);
+        setTimeout(() => navigate("/doctor-login"), 2000);
       } else {
         setError("Failed to load prescriptions. Please try again or contact support.");
       }
